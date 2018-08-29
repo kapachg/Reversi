@@ -1,7 +1,9 @@
 from abstract_player import AbstractPlayer
 from math import inf
 import random
+import copy
 from rules import Rules
+
 
 class Player06(AbstractPlayer):
 
@@ -13,7 +15,15 @@ class Player06(AbstractPlayer):
             self.other_color = Disk.DARK
         self.rules = Rules()
 
-    def minimax(self, node, depth, maximizer):
+    def minimax(self, board, depth=2, maximizer=True):
+
+
+        simulation = copy.deepcopy(board)
+        moves = rules.possible_moves(simulation, self.color, self.other_color)
+        for move in moves:
+
+
+
         if (depth == 0) or (node.endofgame):
             return self.calculate_value(node)
         if maximizer:
@@ -28,13 +38,13 @@ class Player06(AbstractPlayer):
             return value
 
     def calculate_value(self, board):
-        if self.endofgame(board)
-            if self.endofgame(board)[1] == self.color:
-                return inf
-            else:
-                return -inf
+        if self.endofgame(board):
+            return inf
         return random.randrange(10,1001, 10)
 
+
+    # This method is not effecient by itself, when applying real value it should be
+    # integrated into calculate_value (because the possible_moves are already calculated)
     def endofgame(self, board):
         self_moves = self.rules.possible_moves(board, self.color, other_color)
         if not self_moves:

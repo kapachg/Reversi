@@ -30,6 +30,7 @@ class Game:
         """
         Updates the board after get_move from the user
         """
+        return_board(self.moves[self.chosen_move])
 
         for direction in self.moves[self.chosen_move]:
             i, j = direction

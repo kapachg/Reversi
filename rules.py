@@ -88,6 +88,23 @@ class Rules:
                     moves.update(move)
         return moves
 
+    def update_board(self, board, move):
+        """
+        Updates the board after get_move from the user
+        """
+
+        for direction in self.moves[self.chosen_move]:
+            i, j = direction
+            x, y = move
+            self.board.place_disk(x, y, self.p1.color)
+            x += i
+            y += j
+            while self.rules.check_board_limits(x, y) and self.board.current_state()[x][y] == self.p2.color:
+                #print(x,y,i,j)
+                self.board.place_disk(x, y, self.p1.color)
+                x += i
+                y += j
+
     def winner(self, board):
         """ Returns the winner of the game
 

@@ -63,12 +63,28 @@ for line in board[:-1]:
 return is_valid
 
 
+def get_move(self, board, rules, possible_moves, enemy_color):
+    """
+    Determine best score move from a list of possible moves
+
+    :param board: the current board object, necessary for evaluating possible moves
+    :param rules: the current rules object,  necessary for evaluating possible moves
+    :param possible_moves: a list of tuples(int, int)
+    :param enemy_color: Disk enum
+    :return:
+
+    chosen_move: a tuple of x,y (int, int) coordinates
+    """
 
 
+if isinstance(self.p1, InteractivePlayer):
+    self.chosen_move = self.p1.get_move(self.ui, self.moves.keys())
 
+if isinstance(self.p1, RandomPlayer):
+    self.chosen_move = self.p1.get_move(list(self.moves.keys()))
 
-
-
+if isinstance(self.p1, SimplePlayer):
+    self.chosen_move = self.p1.get_move(self.board, self.rules, self.moves.keys(), self.p2.color)
 
 
 

@@ -19,8 +19,8 @@ class UI:
         :param board: gets the board current_state (ie, including the board size)
         :return: output to the screen. No return value.
         """
-        COLS = board[-1][0]
-        ROWS = board[-1][1]
+        COLS = len(board[0])
+        ROWS = len(board)
 
         l = [' '+chr(i)+' |' for i in range(ord('a'), ord('a')+COLS)]
         print(' '*2 + '|' + ''.join(l))

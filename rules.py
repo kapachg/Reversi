@@ -4,7 +4,7 @@ from board import Board
 class Rules:
 
     def __init__(self):
-        pass
+        self.pass_turn_when_no_moves = True
 
     def check_board_limits(self, x, y):
         """
@@ -48,13 +48,13 @@ class Rules:
         :param other_disk: Other player's color (Disk Enum)
         :return:
         False if invalid
-        Dictionary of mvoe as a key and the flipping directions list as value {move : [directions]}
+        Dictionary of move as a key and the flipping directions list as value {move : [directions]}
         """
         self.x, self.y = move
         self.board = board
 
-        self.ROWS = board[-1][0]
-        self.COLS = board[-1][1]
+        self.ROWS = len(board) #[-1][0]
+        self.COLS = len(board[0]) #[-1][1]
 
         self.current_disk = current_disk
         self.other_disk = other_disk
@@ -75,6 +75,19 @@ class Rules:
                         eat_enemy[(self.x,self.y)] = eat_enemy.get((self.x,self.y), []) + [tmp]
         return eat_enemy
 
+    def possible_moves(self, board, p1_color, p2_color):
+        """
+        Returns a dictionary of current player possible moves as keys and the directions of the flipping disks as values
+        """
+
+        moves = {}
+        for x in range(len(board)):
+            for y in range(len(board[0])):
+                move = self.validate_move(board, (x, y), p1_color, p2_color)
+                if (move):
+                    moves.update(move)
+        return moves
+
     def winner(self, board):
         """ Returns the winner of the game
 
@@ -93,13 +106,6 @@ class Rules:
         else:
             return "draw"
 
-
-    def no_moves(self, game):
-        """
-        Determine what to do if player has no move, pass the turn by default
-        :param game: the game object
-        """
-        game.p1, game.p2 = game.p2, game.p1
 
 
 if (__name__ == "__main__"):

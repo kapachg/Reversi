@@ -1,17 +1,18 @@
 from abstract_player import AbstractPlayer
+from ui import UI
 
 class InteractivePlayer(AbstractPlayer):
 
     def __init__(self, color):
         self.color = color
+        self.ui = UI()
 
-    def get_move(self, ui, possible_moves):
-        """
-        Asks the user for its next move.
-        :param ui: gets the current UI object for interaction with the user
-        :param possible_moves: a list of the possible moves
-        :return:
+    def get_move(self, board, possible_moves):
+        """Chooses an action from the given actions
 
-        a tuple of x,y (int, int) coordinates
+        :param board: The current board state. It is a matrix whose cells are of the enum type Disk.
+        :param possible_moves: A list of possible moves. Each move is a tuple of coordinates (x, y).
+        :return: The desired move in the list of possible moves (a tuple).
         """
-        return ui.user_move(self.color, possible_moves)
+
+        return self.ui.user_move(self.color, possible_moves)

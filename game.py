@@ -3,7 +3,7 @@ from ui import UI
 from disk import Disk
 from interactive_player import InteractivePlayer
 from random_player import RandomPlayer
-from simple_player import SimplePlayer
+#from simple_player import SimplePlayer
 from rules import Rules
 
 
@@ -16,25 +16,15 @@ class Game:
         """
 
         self.board = Board()
-        self.p1 = SimplePlayer(Disk.DARK)
+        #self.p1 = SimplePlayer(Disk.DARK)
         #self.p1 = InteractivePlayer(Disk.DARK)
         #self.p2 = InteractivePlayer(Disk.LIGHT)
-        #self.p1 = RandomPlayer(Disk.DARK)
+        self.p1 = RandomPlayer(Disk.DARK)
         self.p2 = RandomPlayer(Disk.LIGHT)
         self.rules = Rules()
         self.ui = UI()
 
-    def possible_moves(self):
-        """
-        Returns a dictionary of current player possible moves as keys and the directions of the flipping disks as values
-        """
 
-        self.moves = {}
-        for x in range(self.board.current_state()[-1][0]):
-            for y in range(self.board.current_state()[-1][1]):
-                move = self.rules.validate_move(self.board.current_state(), (x, y), self.p1.color, self.p2.color)
-                if (move):
-                    self.moves.update(move)
 
     def update_board(self):
         """
@@ -77,25 +67,17 @@ class Game:
         self.ui.print_board(self.board.current_state())
 
         while (True):
-            self.possible_moves()
+            self.moves = self.rules.possible_moves(self.board.current_state(), self.p1.color, self.p2.color)
 
             # If there are no available moves, pass the turn
-            if not self.moves:
-                self.rules.no_moves(self)
+            if not self.moves and self.rules.pass_turn_when_no_moves:
+                game.p1, game.p2 = game.p2, game.p1
 
                 # If other player also don't have available moves, quit the game
                 if not self.moves:
                     return self.quit_game()
 
-
-            if isinstance(self.p1, InteractivePlayer):
-                self.chosen_move = self.p1.get_move(self.ui, self.moves.keys())
-
-            if isinstance(self.p1, RandomPlayer):
-                self.chosen_move = self.p1.get_move(list(self.moves.keys()))
-
-            if isinstance(self.p1, SimplePlayer):
-                self.chosen_move = self.p1.get_move(self.board, self.rules, self.moves.keys(), self.p2.color)
+            self.chosen_move = self.p1.get_move(self.board.current_state(), list(self.moves.keys()))
 
             if not isinstance(self.p1, InteractivePlayer):
                 print(f"Player {self.p1} {type(self.p1)}:")
@@ -119,7 +101,7 @@ class Game:
 
 if (__name__ == "__main__"):
     player = {}
-    for i in range(1000):
+    for i in range(10):
         game = Game()
         winner = game.start_game()
         player[winner] = player.get(winner, 0) + 1

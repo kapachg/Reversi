@@ -8,21 +8,21 @@ class Board():
     coordinates_to_matrix(col, row, transpose=False): A static method to convert human coordinates (a..h,1..8) to matrix [8][8]
     coordinates_to_user(x, y, transpose=False): A static method to convert matrix coordinates[8][8] to human coordinates (a..h,1..8)
     count_disks(): count each player's disks
-
-    the dimensions of the board are stores in the following constants:
-    NUMBER_OF_COLS
-    NUMBER_OF_ROWS
     """
-    NUMBER_OF_COLS = 8
-    NUMBER_OF_ROWS = 8
-    SIZE = (NUMBER_OF_COLS, NUMBER_OF_ROWS)
 
-    def __init__(self):
+    def __init__(self, rows=8, cols=8):
         """
         Initializing the matrix with empty spaces and 4 disks in the middle
+
+        :param
+        rows - number of rows (int)
+        cols - number of columns (int)
         """
-        self.matrix = [[Disk.NONE for x in range(Board.SIZE[0])] for y in range(Board.SIZE[1])]
+        self.rows = rows
+        self.cols = cols
+        self.matrix = [[Disk.NONE for x in range(rows)] for y in range(cols)]
         init_array = (('d','4',Disk.LIGHT), ('e','5',Disk.LIGHT), ('d','5',Disk.DARK), ('e','4',Disk.DARK))
+     #   init_array = (('a', '2', Disk.LIGHT), ('b', '5', Disk.LIGHT), ('d', '5', Disk.DARK), ('e', '4', Disk.DARK))
         for item in init_array:
             self.place_disk(*self.coordinates_to_matrix(item[0], item[1]), item[2])
 
@@ -31,7 +31,7 @@ class Board():
         Return the matrix of Disks as a 2D tuple
         last item [-1] is the size of the board as a tuple (int, int)
         """
-        return tuple([tuple(i) for i in self.matrix] + [Board.SIZE])
+        return tuple([tuple(i) for i in self.matrix]) # + [(self.rows, self.cols)])
 
     def place_disk(self, x, y, disk):
         self.matrix[x][y] = disk
@@ -91,8 +91,10 @@ if (__name__ == "__main__"):
     print(b.current_state())
 
     print("(x,y)")
-    for x in range(cols):
-        for y in range(rows):
+    for x in range(rows):
+        for y in range(cols):
 #            print(f"({x},{y}) {b.current_state()[x][y]}",end=' ')
             print(f"({b.coordinates_to_user(x,y)}) {b.current_state()[x][y]}",end=' ')
         print()
+
+    print(len(b.matrix), len(b.matrix[0]))

@@ -96,3 +96,20 @@ for i in range(-1, 2):  # Direction of 1st axis
             if (tmp):
                 eat_enemy[(self.x, self.y)] = eat_enemy.get((self.x, self.y), []) + [tmp]
 return eat_enemy
+
+
+def minimax(self, board, depth=2, maximizer=True):
+    moves = rules.possible_moves(board, self.color)
+    for move in moves:
+        if (depth == 0) or (node.endofgame):
+            return self.calculate_value(node)
+        if maximizer:
+            value = -inf
+            next_board = copy.deepcopy(rules.update_board(board, move, moves[move], self.color))
+            value = max(value, minimax(next_board, depth - 1, False))
+        return value
+    else:
+        value = inf
+        for child in node:
+            value = min(value, minimax(child, depth - 1, True))
+        return value

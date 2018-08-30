@@ -42,7 +42,7 @@ class SimplePlayer(AbstractPlayer):
         """
         simulation = copy.deepcopy(board)
 
-        res = self.rules.validate_move(simulation.current_state(), move, self.color, enemy_color)
+        res = self.rules.validate_move(simulation.current_state(), move, self.color)
 
         for direction in res[move]:
             i, j = direction

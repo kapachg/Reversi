@@ -31,7 +31,8 @@ class Board():
         Return the matrix of Disks as a 2D tuple
         last item [-1] is the size of the board as a tuple (int, int)
         """
-        return tuple([tuple(i) for i in self.matrix]) # + [(self.rows, self.cols)])
+        return self.matrix
+        #return tuple([tuple(i) for i in self.matrix]) # + [(self.rows, self.cols)])
 
     def place_disk(self, x, y, disk):
         self.matrix[x][y] = disk
@@ -67,16 +68,6 @@ class Board():
         if (transpose):
             col, row = row, col
         return col + str(row)
-
-    def count_disks(self):
-        """
-        Returns a dictionary of each color and the number of its disks on the board {Disk,int}
-        """
-        light = dark = 0
-        for line in self.matrix:
-            light += line.count(Disk.LIGHT)
-            dark += line.count(Disk.DARK)
-        return {Disk.DARK : dark, Disk.LIGHT : light}
 
 if (__name__ == "__main__"):
     b = Board()

@@ -1,10 +1,18 @@
 from disk import Disk
 from board import Board
+import copy
 
 class Rules:
 
     def __init__(self):
         self.pass_turn_when_no_moves = True
+
+    @staticmethod
+    def other_color(color):
+        if (color == Disk.LIGHT):
+            return Disk.DARK
+        if (color == Disk.DARK):
+            return Disk.LIGHT
 
     def check_board_limits(self, x, y):
         """
@@ -38,7 +46,7 @@ class Rules:
             y1 += j
         return False
 
-    def validate_move(self, board, move, current_disk, other_disk):
+    def validate_move(self, board, move, current_disk):
         """ Check if a move is valid
 
         :param board: current board state (not object). Return the matrix of Disks as a 2D tuple,
@@ -57,7 +65,10 @@ class Rules:
         self.COLS = len(board[0]) #[-1][1]
 
         self.current_disk = current_disk
-        self.other_disk = other_disk
+        self.other_disk = self.other_color(current_disk)
+
+
+   #     print(self.x, self.y, self.ROWS, self.COLS, self.current_disk, self.other_disk)
 
         # Is the position occupied?
         if (self.board[self.x][self.y] != Disk.NONE):
@@ -75,7 +86,7 @@ class Rules:
                         eat_enemy[(self.x,self.y)] = eat_enemy.get((self.x,self.y), []) + [tmp]
         return eat_enemy
 
-    def possible_moves(self, board, p1_color, p2_color):
+    def possible_moves(self, board, color):
         """
         Returns a dictionary of current player possible moves as keys and the directions of the flipping disks as values
         """
@@ -83,27 +94,30 @@ class Rules:
         moves = {}
         for x in range(len(board)):
             for y in range(len(board[0])):
-                move = self.validate_move(board, (x, y), p1_color, p2_color)
+                move = self.validate_move(board, (x, y), color)
                 if (move):
                     moves.update(move)
         return moves
 
-    def update_board(self, board, move):
+    def update_board(self, board, move, directions, color):
         """
-        Updates the board after get_move from the user
+        Returns an updated board after get_move from the user
         """
 
-        for direction in self.moves[self.chosen_move]:
+#        new_board = copy.deepcopy(board)
+        #print(new_board)
+        for direction in directions:
             i, j = direction
             x, y = move
-            self.board.place_disk(x, y, self.p1.color)
+            board[x][y] = color
             x += i
             y += j
-            while self.rules.check_board_limits(x, y) and self.board.current_state()[x][y] == self.p2.color:
-                #print(x,y,i,j)
-                self.board.place_disk(x, y, self.p1.color)
+            while self.check_board_limits(x, y) and board[x][y] == self.other_color(color):
+                board[x][y] = color
                 x += i
                 y += j
+
+        return board
 
     def winner(self, board):
         """ Returns the winner of the game
@@ -113,8 +127,11 @@ class Rules:
         Returns:
         Disk.enum with maximum disks or "draw" if number of disks if equal
         """
-        light = board.count_disks()[Disk.LIGHT]
-        dark = board.count_disks()[Disk.DARK]
+
+        light = dark = 0
+        for line in board:
+            light += line.count(Disk.LIGHT)
+            dark += line.count(Disk.DARK)
         print(f"Light disks: {light} Dark disks: {dark}")
         if (light > dark):
             return Disk.LIGHT
@@ -123,15 +140,49 @@ class Rules:
         else:
             return "draw"
 
+    @staticmethod
+    def coordinates_to_matrix(col, row, transpose=False):
+        """
+
+        :param col: column letter (single str)
+        :param row: row number (converted to int)
+        :param transpose: whether to transpose columns with rows, boolean
+        :return:
+        (int, int) a tuple of x,y coordinates [0..SIZE] (which is opposite from the human format)
+        """
+        x = int(row)-1
+        y = ord(col)-ord('a')
+        if (transpose):
+            x, y = y, x
+        return x, y
+
+    @staticmethod
+    def coordinates_to_user(x, y, transpose=False):
+        """
+
+        :param x: int index
+        :param y: int index
+        :param transpose: whether to transpose columns with rows, boolean
+        :return:
+        a tuple of two single character str in the format of col, row (which is opposite from the format of the matrix)
+        """
+        col = chr(y+ord('a'))
+        row = x+1
+        if (transpose):
+            col, row = row, col
+        return col + str(row)
 
 
 if (__name__ == "__main__"):
     r = Rules()
     b = Board()
 
+    disk = r.coordinates_to_user(4, 7)
+    print(disk, len(disk), type(disk))
+
     for x in range(8):
         for y in range(8):
-            if r.validate_move(b.current_state(),(x,y)):
+            if r.validate_move(b.current_state(),(x,y), Disk.DARK):
                # pass
          #       print(r.validate_move(b.current_state(), (x, y)))
                 print(x,y)

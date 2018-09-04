@@ -76,16 +76,34 @@ if (__name__ == "__main__"):
 #    print(b.current_state())
 #    print(b.current_state()[0])
 #    print(b.current_state()[-1][0])
-    cols = b.current_state()[-1][0]
-    rows = b.current_state()[-1][1]
+#    cols = b.current_state()[-1][0]
+#    rows = b.current_state()[-1][1]
 
-    print(b.current_state())
+ #   print(b.current_state())
 
-    print("(x,y)")
-    for x in range(rows):
-        for y in range(cols):
+
+    matrix = b.matrix
+    x = 4
+    y = 3
+
+    print(matrix[x][y])
+    for i in range(8): #-1,2,2):
+        for j in range(8): #(-1,2,2):
+            try:
+                sli = matrix.count[3](Disk.LIGHT)
+                print(sli)
+            except:
+                pass
+#    sli = [matrix[x][::-1]]
+#    print(sli)
+
+#    print("(x,y)")
+ #   for x in range(8):
+  #      for y in range(8):
+   #         print(b.matrix[x][y])
+  #          print(b.current_state()[x][y])
 #            print(f"({x},{y}) {b.current_state()[x][y]}",end=' ')
-            print(f"({b.coordinates_to_user(x,y)}) {b.current_state()[x][y]}",end=' ')
-        print()
+ ##           print(f"({b.coordinates_to_user(x,y)}) {b.current_state()[x][y]}",end=' ')
+#        print()
 
     print(len(b.matrix), len(b.matrix[0]))

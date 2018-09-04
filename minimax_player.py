@@ -36,9 +36,10 @@ class Player06(AbstractPlayer):
 
         for move in moves:
 #            print(f"move = {move}")
-            next_board = copy.deepcopy(self.rules.update_board(board, move, moves[move], color))
+            next_board = copy.deepcopy(board)
+            self.rules.update_board(next_board, move, moves[move], color)
             value = func(value, self.minimax(next_board, depth-1, not maximizer))
-            print(f"{func.__name__}imizer value: {value}")
+#            print(f"{func.__name__}imizer value: {value}")
             return value
 
     def calculate_value(self, board):
@@ -68,7 +69,8 @@ class Player06(AbstractPlayer):
                         val += self.move_count[disk] * sign
                     except:
                         val += sign * 100000
-        print(f"calval = {val}")
+ #                       print(f"Disk: {disk} [{i,j}], val so far: {val}")
+        #print(f"calval = {val}")
         return val
 
 
@@ -91,22 +93,25 @@ class Player06(AbstractPlayer):
 #        return
         #BUFFER = 8192
         pattern = r"[a-z]\d"
-        moves_file = "book.gam"
+        moves_file = "book.game"
 #        print("open file")
-        with open(moves_file, "r") as f:
-            for data in f:
-                moves = re.findall(pattern, data)
-                for i,move in enumerate(moves):
-                    try:
-                        self.move_count[move] = self.move_count.get(move, 0) + 1
-                    except:
-                        self.move_count = {}
-                        self.move_count[move] = 1
-                    try:
-                        self.move_priority[move] = self.move_priority.get(move, 0) + len(moves)-i
-                    except:
-                        self.move_priority = {}
-                        self.move_priority[move] = len(moves)
+        try:
+            with open(moves_file, "r") as f:
+                for data in f:
+                    moves = re.findall(pattern, data)
+                    for i,move in enumerate(moves):
+                        try:
+                            self.move_count[move] = self.move_count.get(move, 0) + 1
+                        except:
+                            self.move_count = {}
+                            self.move_count[move] = 1
+                        try:
+                            self.move_priority[move] = self.move_priority.get(move, 0) + len(moves)-i
+                        except:
+                            self.move_priority = {}
+                            self.move_priority[move] = len(moves)
+        except:
+            print("File Error")
 #        print("close file")
 
 

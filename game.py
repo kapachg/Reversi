@@ -72,8 +72,9 @@ class Game:
                 print (Board.coordinates_to_user(*self.chosen_move))
 
             # Apply and display chosen move
-            self.board.matrix = self.rules.update_board(self.board.current_state(), self.chosen_move, self.moves[self.chosen_move], self.p1.color)
-     #       self.ui.print_board(self.board.current_state())
+            #self.board.matrix = \
+            self.rules.update_board(self.board.current_state(), self.chosen_move, self.moves[self.chosen_move], self.p1.color)
+            self.ui.print_board(self.board.current_state())
            # print(f"Light disk: {self.board.count_disks()[Disk.LIGHT]} Dark disk: {self.board.count_disks()[Disk.DARK]}")
 
             # Switch player

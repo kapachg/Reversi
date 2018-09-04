@@ -117,7 +117,7 @@ class Rules:
                 x += i
                 y += j
 
-        return board
+    #    return board
 
     def winner(self, board):
         """ Returns the winner of the game
